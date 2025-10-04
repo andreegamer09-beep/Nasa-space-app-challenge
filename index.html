@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyecto Ambiental Interactivo: Xela</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { font-family:'Roboto', sans-serif; margin:0; background:#f4f4f4; color:#333; overflow-x:hidden; }
+header { background: linear-gradient(90deg,#1a1b4b,#3a3b7b); color:white; padding:60px 20px; text-align:center; position:relative; overflow:hidden;}
+header h1 { margin:0; font-size:3em; animation:fadeDown 1s ease; }
+header p { font-size:1.5em; margin-top:10px; animation:fadeDown 1.5s ease; }
+header img { width:150px; margin-top:20px; animation:fadeUp 2s ease; }
+
+@keyframes fadeDown {
+  0% {opacity:0; transform:translateY(-50px);}
+  100% {opacity:1; transform:translateY(0);}
+}
+@keyframes fadeUp {
+  0% {opacity:0; transform:translateY(50px);}
+  100% {opacity:1; transform:translateY(0);}
+}
+
+section { padding:80px 20px; max-width:1200px; margin:auto; opacity:0; transform:translateY(50px); transition:all 1s ease; }
+section.show { opacity:1; transform:translateY(0); }
+
+h2 { color:#1a1b4b; margin-bottom:30px; font-size:2.8em; text-align:center; }
+p { font-size:1.2em; line-height:1.8; margin-bottom:20px; text-align:justify; }
+
+#map-air, #map-forest { height:550px; width:100%; margin-top:20px; border-radius:15px; box-shadow:0 0 20px rgba(0,0,0,0.3); }
+.img-section { width:100%; border-radius:15px; margin-top:20px; box-shadow:0 0 20px rgba(0,0,0,0.3); transition:transform 0.3s ease; }
+.img-section:hover { transform:scale(1.05); }
+
+.slider { position:relative; max-width:100%; height:500px; margin-top:40px; overflow:hidden; border-radius:15px; box-shadow:0 0 25px rgba(0,0,0,0.4);}
+.slides { display:flex; width:200%; height:100%; transition:transform 1s ease; }
+.slides img { width:100%; height:100%; object-fit:cover; }
+
+.analisis, .soluciones { background-color:#e1e1f0; padding:30px; border-radius:15px; margin-top:40px; }
+
+footer { background-color:#1a1b4b; color:white; text-align:center; padding:40px; }
+footer p { margin:5px 0; }
+
+button { padding:10px 20px; background:#f0a500; border:none; border-radius:10px; cursor:pointer; font-weight:bold; transition:all 0.3s ease; margin:10px; }
+button:hover { background:#d18f00; transform:scale(1.05); }
+</style>
+</head>
+<body>
+
+<header>
+<h1>Proyecto Ambiental Interactivo: Xela</h1>
+<p>Mapas de calidad del aire y zonas recomendadas para reforestación</p>
+<img src="C:\Users\Usuario\Downloads/nasa1.jpg" class="img-section" alt="NASA Imagen">
+</header>
+
+<section id="introduccion">
+<h2>Introducción</h2>
+<p>Este proyecto busca visualizar de manera interactiva la calidad del aire en Quetzaltenango (Xela) y señalar zonas prioritarias para reforestación. Se utilizan datos reales de AQI, imágenes satelitales y mapas interactivos para generar información confiable y útil para decisiones ambientales estratégicas. La iniciativa busca promover sostenibilidad y salud ambiental en la ciudad.</p>
+</section>
+
+<section id="sobre-xela">
+<h2>Sobre Quetzaltenango</h2>
+<p>Quetzaltenango es la segunda ciudad más grande de Guatemala, con problemas de contaminación por emisiones vehiculares, industria y quema de basura. La vegetación urbana es limitada, lo que aumenta la concentración de partículas en el aire y afecta la salud de los habitantes.</p>
+<img src="C:\Users\Usuario\Downloads/xelamap.png" alt="Vista de Xela" class="img-section">
+</section>
+
+<section id="calidad-aire">
+<h2>Calidad del Aire en Xela</h2>
+<p>Según los datos más recientes, la ciudad presenta un AQI de <strong>116</strong>, considerado <strong>insalubre para grupos sensibles</strong>. Esto afecta principalmente a niños, adultos mayores y personas con enfermedades respiratorias.</p>
+
+<img src="C:\Users\Usuario\Downloads/calidaddelaire.png" alt="Mapa de Calidad del Aire en Quetzaltenango" class="img-section">
+
+<!-- Mapa interactivo de calidad del aire -->
+<div id="map-air"></div>
+
+<div class="analisis">
+<h3>Análisis de Contaminación</h3>
+<ul>
+<li>Principales contaminantes: <strong>PM2.5</strong> (partículas finas), <strong>PM10</strong> (partículas gruesas), <strong>dióxido de nitrógeno</strong> y <strong>ozono troposférico</strong>.</li>
+<li>Orígenes: emisiones vehiculares, industrias locales, quema de basura y polvo urbano.</li>
+<li>Zonas más afectadas: centro de la ciudad, avenidas principales y barrios densamente poblados.</li>
+<li>Impacto en la salud: aumenta riesgo de <strong>asma, bronquitis, enfermedades cardiovasculares y alergias respiratorias</strong>.</li>
+<li>Importancia de monitoreo: los mapas interactivos permiten visualizar en tiempo real las zonas más contaminadas y priorizar acciones de mitigación.</li>
+</ul>
+</div>
+</section>
+
+<section id="reforestacion">
+<h2>Zonas Recomendadas para Reforestar</h2>
+<p>Se han identificado áreas prioritarias para plantar árboles y vegetación nativa. La reforestación urbana ayuda a:</p>
+<ul>
+<li>Reducir la concentración de partículas contaminantes en el aire.</li>
+<li>Disminuir la temperatura urbana y mitigar el efecto de “isla de calor”.</li>
+<li>Prevenir erosión del suelo y mejorar la calidad de los cuerpos de agua.</li>
+<li>Aumentar la biodiversidad y generar orredores ecológicos que conecten parques y reservas naturales.</li>
+<li>Favorecer la salud física y mental de los habitantes, al generar espacios verdes de recreación.</li>
+</ul>
+
+<!-- Mapa interactivo de reforestación -->
+<div id="map-forest"></div>
+
+<div class="soluciones">
+<h3>Soluciones Propuestas y Futuras Acciones</h3>
+<ul>
+<li>Implementar un plan de reforestación anual en áreas estratégicas, priorizando especies nativas.</li>
+<li>Fomentar la participación ciudadana mediante programas educativos y voluntariado ambiental.</li>
+<li>Monitorear la calidad del aire con estaciones de medición y actualizar los mapas interactivos en tiempo real.</li>
+<li>Usar tecnología de imágenes satelitales para evaluar el crecimiento urbano y planificar la expansión verde.</li>
+<li>Crear políticas públicas que regulen emisiones industriales y fomenten transporte sostenible.</li>
+</ul>
+</div>
+</section>
+
+<section id="impacto">
+<h2>Impacto Ambiental: Antes y Después</h2>
+<p>Las imágenes satelitales muestran cómo la expansión urbana ha reducido áreas verdes y cómo la reforestación puede revertir parcialmente estos efectos. Esto permite:</p>
+<ul>
+<li>Identificar zonas críticas para la recuperación ecológica.</li>
+<li>Evaluar la efectividad de los programas de reforestación.</li>
+<li>Promover estrategias integrales de desarrollo urbano sostenible.</li>
+</ul>
+
+<div class="slider">
+<div class="slides">
+<img src="https://eoimages.gsfc.nasa.gov/images/imagerecords/146000/146026/quetzaltenango_lrg.jpg" alt="Antes">
+<img src="https://eoimages.gsfc.nasa.gov/images/imagerecords/146000/146027/quetzaltenango_after.jpg" alt="Después">
+</div>
+</div>
+</section>
+
+<footer>
+<p>© 2025 Proyecto Ambiental Xela. Todos los derechos reservados.</p>
+<p>Equipo: Andree Gamer09 y colaboradores</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+// Animaciones al hacer scroll
+const sections = document.querySelectorAll("section");
+window.addEventListener("scroll", () => {
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 100) section.classList.add("show");
+  });
+});
+
+// Slider de imágenes
+let slideIndex = 0;
+const slides = document.querySelector(".slides");
+function showSlides() {
+  slideIndex++;
+  if(slideIndex > 1) slideIndex = 0;
+  slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+  setTimeout(showSlides, 4000);
+}
+showSlides();
+
+// Mapa de Calidad del Aire
+var mapAir = L.map('map-air').setView([14.8333, -91.5167], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; OpenStreetMap contributors'
+}).addTo(mapAir);
+L.circle([14.8340,-91.5130], {radius:400, color:'#FF7F50', fillColor:'#FF6347', fillOpacity:0.5}).addTo(mapAir)
+.bindPopup("Centro: AQI 116 - Insalubre para grupos sensibles");
+L.circle([14.8280,-91.5200], {radius:350, color:'#FFA500', fillColor:'#FFD700', fillOpacity:0.5}).addTo(mapAir)
+.bindPopup("Oeste: AQI 110 - Moderadamente insalubre");
+
+// Mapa de Reforestación
+var mapForest = L.map('map-forest').setView([14.8333,-91.5167],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; OpenStreetMap contributors'
+}).addTo(mapForest);
+L.circle([14.8360,-91.5100], {radius:600, color:'green', fillOpacity:0.4})
+.addTo(mapForest).bindPopup("Zona Este: Reforestación con especies nativas");
+L.circle([14.8290,-91.5250], {radius:500, color:'green', fillOpacity:0.4})
+.addTo(mapForest).bindPopup("Zona Sur: Recuperación de bosque urbano");
+</script>
+
+</body>
+</html>
+
